@@ -161,6 +161,19 @@
     .stage{box-shadow:0 8px 20px rgba(0,0,0,.35)}
     .cartaz,.cartaz-p1,.cartaz-info{box-shadow:0 8px 18px rgba(0,0,0,.28)}
   }
+  /* --- MODO MOBILE: página rolável e slides em fluxo --- */
+  @media (max-width: 800px){
+    .stage{min-height:unset; height:auto; overflow:visible}
+    .slides{height:auto}
+    .slide{position:static; display:none; overflow:visible; padding:16px}
+    .slide.active{display:block}
+    .cartaz,.cartaz-p1,.cartaz-info{min-height:unset}
+    /* botões sempre acessíveis no mobile */
+    .nav{position:fixed; inset:auto; left:0; right:0; bottom:12px; pointer-events:none}
+    .arrow{position:fixed; bottom:12px; top:auto; transform:none}
+    .prev{left:12px} .next{right:12px}
+    body{overscroll-behavior-y:auto}
+  }
 </style>
 </head>
 <body>
@@ -374,3 +387,5 @@
 </script>
 </body>
 </html>
+
+

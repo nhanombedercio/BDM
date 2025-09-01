@@ -3,389 +3,227 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Apresentação — BDM (Responsiva)</title>
+<title>Apresentação — BDM</title>
 <style>
   :root{
-    /* Tema geral */
-    --bg:#151a30; --chrome:#0f1325; --txt:#f4f7fa; --accent:#ffd54e;
-    /* Cores do cartaz */
     --cartaz:#ffffff; --preto:#000; --verde:#007f3e; --amarelo:#ffcc29;
-    /* Azuis para cartões informativos */
     --azul:#2aa7df; --azul-esc:#145d86;
-    /* Escalas */
-    --pad:12px; /* base spacing */
   }
-  *{box-sizing:border-box}
-  html,body{
-    height:100%; margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
-    background:var(--bg); color:var(--txt);
-  }
-  /* Suporte a áreas seguras (iPhone notch) e 100svh para mobile */
-  .shell{
-    min-height:100svh; display:grid; grid-template-rows:auto 1fr auto; gap:10px;
-    padding:calc(var(--pad) + env(safe-area-inset-top)) calc(var(--pad) + env(safe-area-inset-right)) calc(var(--pad) + env(safe-area-inset-bottom)) calc(var(--pad) + env(safe-area-inset-left));
-  }
-  header, footer{
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-    background:var(--chrome); border:1px solid rgba(255,255,255,.08);
-    border-radius:12px; padding:10px 14px;
-  }
-  header .title{font-weight:700; opacity:.95}
-  header .pager{font-weight:800; background:rgba(255,255,255,.08); padding:6px 10px; border-radius:999px}
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{min-height:100%; font-family:"Segoe UI", Roboto, Arial, sans-serif; background:#f3f6fa; color:#111;}
 
-  .stage{
-    position:relative; border-radius:14px; overflow:hidden; box-shadow:0 12px 36px rgba(0,0,0,.45);
-    border:1px solid rgba(255,255,255,.08); background:#0b0f12; display:grid; place-items:center;
-    min-height:60svh; /* mais alta no mobile */
-  }
-  .slides{position:relative; width:100%; height:100%;}
-  .slide{position:absolute; inset:0; padding:min(2vh,24px) min(2vw,24px); display:none; overflow:auto; -webkit-overflow-scrolling:touch}
-  .slide.active{display:block;}
+  .slides{display:flex; flex-direction:column;}
+  .slide{width:100%; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:16px 0;}
 
-  /* Navegação */
-  .nav{position:absolute; inset:0; pointer-events:none}
-  .arrow{
-    position:absolute; top:50%; transform:translateY(-50%);
-    width:56px; height:56px; border-radius:50%; display:grid; place-items:center;
-    font-size:22px; font-weight:900; background:rgba(0,0,0,.35); color:#fff;
-    border:1px solid rgba(255,255,255,.25); pointer-events:auto; cursor:pointer; user-select:none;
-    touch-action:manipulation;
+  /* Estrutura dos cartazes */
+  .cartaz, .cartaz-p1, .cartaz-info{
+    width:100%; max-width:1200px; background:#fff; color:#111; border-radius:16px;
+    box-shadow:0 18px 48px rgba(0,0,0,.14); padding:32px 20px calc(32px + 35px); margin:auto; position:relative;
   }
-  .arrow:hover{background:rgba(0,0,0,.5)}
-  .prev{left:12px} .next{right:12px}
+  .cartaz{text-align:center;}
+  .emblema{max-height:120px; margin-bottom:16px;}
+  .titulo{font-weight:700; font-size:clamp(20px,5vw,44px); margin:16px 0;}
+  .rodape{font-size:clamp(14px,2.5vw,18px); color:#111;}
 
-  footer{flex-wrap:wrap}
-  footer .hint{opacity:.8; font-size:.95rem}
-  .buttons{display:flex; gap:8px; flex-wrap:wrap; max-width:100%; overflow:auto; -webkit-overflow-scrolling:touch}
-  .buttons::-webkit-scrollbar{height:6px}
-  .buttons::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2); border-radius:999px}
-  button.jump{background:transparent; color:var(--txt); border:1px solid rgba(255,255,255,.25); padding:6px 10px; border-radius:8px; cursor:pointer; white-space:nowrap}
-  button.jump[aria-current="page"]{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.6); font-weight:700;}
-  button.jump:hover{background:rgba(255,255,255,.08)}
-  .accent{color:var(--accent); font-weight:800}
-
-  /* --- Cartaz padrão (capa) --- */
-  .cartaz{
-    width:100%; max-width:1200px; margin:auto; background:var(--cartaz); color:#111;
-    border-radius:clamp(8px,1vw,16px); box-shadow:0 1vh 3vh rgba(0,0,0,.35);
-    display:flex; align-items:center; justify-content:center; position:relative;
-    padding:clamp(16px,5vh,56px) clamp(12px,3vw,32px) clamp(52px,12vh,96px);
-    text-align:center; min-height:min(92svh, 900px);
-  }
-  .emblema{height:12vh; max-height:120px; width:auto; margin-bottom:2vh;}
-  .top-linha1{font-weight:800; font-size:clamp(16px, 2.8vw, 22px);} /* ajustado */
-  .top-linha2{font-weight:600; font-size:clamp(15px, 2.6vw, 20px);} /* ajustado */
-  .titulo{font-weight:700; font-size:clamp(18px, 6vw, 44px); margin:0 0 clamp(16px,5vh,40px);} /* maior em vw no mobile */
-  .rodape{font-size:clamp(13px, 2.8vw, 18px); color:#111; opacity:.95;}
+  /* faixas coloridas no fundo */
   .faixas{position:absolute; left:0; right:0; bottom:0; display:flex; flex-direction:column;}
   .faixa{width:100%}
-  .verde{height:2vh; background:var(--verde)}
-  .preto1{height:.6vh; background:#000}
-  .branco{height:.6vh; background:#fff}
-  .preto2{height:.6vh; background:#000}
-  .amarelo{height:2.2vh; background:#ffcc29}
+  .verde{height:12px; background:var(--verde)}
+  .preto1{height:3px; background:#000}
+  .branco{height:3px; background:#fff}
+  .preto2{height:3px; background:#000}
+  .amarelo{height:14px; background:#ffcc29}
 
-  /* --- Cartaz citação --- */
-  .cartaz-p1{
-    width:100%; max-width:1200px; background:#fff; border-radius:clamp(8px,1vw,16px);
-    box-shadow:0 1vh 3vh rgba(0,0,0,.35); position:relative; overflow:hidden;
-    padding:clamp(16px,4vh,40px) clamp(12px,3vw,32px) clamp(44px,10vh,80px);
-    display:flex; align-items:center; margin:auto; min-height:min(92svh, 900px);
-  }
-  .cartaz-p1 .grade{display:grid; gap:clamp(12px,2.5vw,32px); align-items:center; grid-template-columns:34% 1fr; width:100%;}
-  @container style(--responsive: true){}
-  @media(max-width:900px){.cartaz-p1 .grade{grid-template-columns:1fr;}}
-  .cartaz-p1 .foto img{max-width:100%; border-radius:.6vw; box-shadow:0 .8vw 2vw rgba(0,0,0,.2);} 
-  .cartaz-p1 .citacao{position:relative; color:#222;}
-  .cartaz-p1 .aspas-inicio,.cartaz-p1 .aspas-fim{color:#ffd54e; font-weight:900; font-size:clamp(36px,10vw,88px);} /* maior vw para mobile */
-  .cartaz-p1 .aspas-inicio{position:absolute; left:-.2em; top:-.2em;}
-  .cartaz-p1 blockquote{margin:0; padding:2.2rem 0 1rem 0; font-style:italic; line-height:1.5; font-size:clamp(16px,4.5vw,24px);} /* legível no tel. */
-  .cartaz-p1 .assinatura{margin-top:.8rem; font-weight:700; color:#007f3e; font-size:clamp(14px,3.8vw,20px);}
+  /* Citação */
+  .cartaz-p1 .grade{display:grid; gap:24px; align-items:center; grid-template-columns:1fr 1fr;}
+  @media(max-width:800px){.cartaz-p1 .grade{grid-template-columns:1fr;}}
+  .cartaz-p1 img{max-width:100%; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.2);}
+  .cartaz-p1 blockquote{font-style:italic; font-size:clamp(16px,3.8vw,22px); line-height:1.5; margin:12px 0;}
 
-  /* --- Cartaz informativo (Slides 3,4,5) --- */
-  .cartaz-info{
-    width:100%; max-width:1200px; margin:auto; background:#fff; color:#0d2130;
-    border-radius:clamp(8px,1vw,16px); box-shadow:0 1vh 3vh rgba(0,0,0,.35);
-    position:relative; overflow:hidden; padding:clamp(16px,4vh,40px) clamp(12px,3vw,32px) clamp(44px,10vh,80px);
-    display:flex; align-items:flex-start; justify-content:center; min-height:min(92svh, 900px);
+  /* Informativo */
+  .pill{display:inline-block; background:var(--azul); color:#fff; font-weight:800; border-radius:999px; padding:6px 14px; font-size:clamp(14px,3.5vw,16px);}
+  .card{margin-top:16px; background:#fbfdff; border:1px solid #e8f4fb; border-radius:12px; padding:16px;}
+  .bullets{list-style:none; display:grid; gap:8px;}
+  .bullets li{padding-left:20px; position:relative; font-size:clamp(14px,3.5vw,18px); line-height:1.6;}
+  .bullets li::before{content:""; position:absolute; left:0; top:.5em; width:.6em; height:.6em; border-radius:50%; background:var(--azul);}
+  /* Faixas decorativas no rodapé de cada "página" */
+  .cartaz, .cartaz-p1, .cartaz-info{ position:relative; }
+  .cartaz::after, .cartaz-p1::after, .cartaz-info::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:35px;
+    background:
+      linear-gradient(to bottom,
+        #007f3e 0 40%,
+        #000 40% 52%,
+        #fff 52% 64%,
+        #000 64% 76%,
+        #ffcc29 76% 100%
+      );
   }
-  .wrap{width:100%; max-width:1000px;}
-  .pill{
-    display:inline-block; background:var(--azul); color:#fff; font-weight:800;
-    border-radius:999px; padding:.55rem 1.1rem; box-shadow:0 8px 22px rgba(42,167,223,.35);
-    font-size:clamp(0.95rem, 3.8vw, 1.15rem); letter-spacing:.2px;
-  }
-  .card{margin-top:1rem; background:#fbfdff; border:1px solid #e8f4fb; border-radius:16px; padding:clamp(14px,3.8vw,18px);}
-  .bullets{margin:0; padding-left:1.2rem; display:grid; gap:.65rem; list-style:none;}
-  .bullets li{position:relative; padding-left:1.65rem; line-height:1.6; font-size:clamp(14px,4.2vw,18px)}
-  .bullets li::before{
-    content:""; position:absolute; left:0; top:.45rem; width:.8rem; height:.8rem; border-radius:50%;
-    background:radial-gradient(circle at 30% 30%, #fff, var(--azul) 70%);
-    border:2px solid var(--azul-esc); box-shadow:0 3px 8px rgba(20,93,134,.35);
-  }
-  .cartaz-info .faixas{position:absolute; left:0; right:0; bottom:0; display:flex; flex-direction:column;}
+  /* Espaço extra para não sobrepor conteúdo às faixas */
+  .cartaz, .cartaz-p1, .cartaz-info{ padding-bottom: calc(32px + 35px); }
 
-  /* Botão final */
-  .cta-row{ margin-top:2rem; display:flex; justify-content:center; }
-  .cta-btn{
-    display:inline-block; background:var(--amarelo); color:#000; font-weight:800;
-    padding:1rem 1.2rem; border-radius:999px; border:2px solid var(--preto);
-    font-size:clamp(15px,4.2vw,18px); text-decoration:none; box-shadow:0 8px 20px rgba(0,0,0,.25);
+  /* Botão grande e elegante para página dedicada ou slide-CTA */
+  .cta-row{ margin-top:24px; text-align:center; }
+  .cta-big{
+    display:inline-block; background:#ffcc29; color:#000; font-weight:900;
+    padding:18px 28px; border-radius:999px; border:2px solid #000; text-decoration:none;
+    font-size:clamp(18px,4.6vw,24px); box-shadow:0 18px 42px rgba(0,0,0,.22);
     transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
   }
-  .cta-btn:hover{ transform:translateY(-2px); box-shadow:0 12px 26px rgba(0,0,0,.3); filter:brightness(1.05); }
-  .cta-btn:active{ transform:translateY(0); box-shadow:0 6px 14px rgba(0,0,0,.2); }
-
-  /* Acessibilidade */
-  .arrow:focus-visible, button.jump:focus-visible, .cta-btn:focus-visible{
-    outline:3px solid #ffd54e; outline-offset:2px;
+  .cta-big:hover{ transform:translateY(-2px); box-shadow:0 26px 56px rgba(0,0,0,.26); filter:brightness(1.03) }
+  .cta-big:active{ transform:none; box-shadow:0 12px 28px rgba(0,0,0,.2) }
+  /* Setas de navegação entre "páginas" (slides empilhados) */
+  .nav{position:fixed; inset:0; pointer-events:none}
+  .nav .arrow{
+    position:fixed; top:50%; transform:translateY(-50%);
+    width:56px; height:56px; border-radius:50%; display:grid; place-items:center;
+    font-size:22px; font-weight:900; background:rgba(0,0,0,.55); color:#fff;
+    border:1px solid rgba(255,255,255,.35); cursor:pointer; user-select:none;
+    pointer-events:auto; box-shadow:0 8px 24px rgba(0,0,0,.25);
   }
-  @media (prefers-reduced-motion: reduce){
-    .cta-btn{transition:none}
-  }
-
-  /* Ajustes específicos para ecrãs pequenos */
+  .nav .arrow:hover{background:rgba(0,0,0,.7)}
+  .nav .prev{left:12px}
+  .nav .next{right:12px}
   @media (max-width: 640px){
-    header, footer{padding:8px 10px}
-    header .title{font-size:14px}
-    header .pager{font-size:12px; padding:4px 8px}
-    .stage{min-height:72svh}
-    .arrow{width:48px; height:48px}
-    .prev{left:8px} .next{right:8px}
-    footer .hint{display:none} /* menos ruído no mobile */
-    .shell{gap:8px}
-  }
-
-  /* Reduz um pouco sombras no mobile para performance */
-  @media (max-width: 480px){
-    .stage{box-shadow:0 8px 20px rgba(0,0,0,.35)}
-    .cartaz,.cartaz-p1,.cartaz-info{box-shadow:0 8px 18px rgba(0,0,0,.28)}
-  }
-  /* --- MODO MOBILE: página rolável e slides em fluxo --- */
-  @media (max-width: 800px){
-    .stage{min-height:unset; height:auto; overflow:visible}
-    .slides{height:auto}
-    .slide{position:static; display:none; overflow:visible; padding:16px}
-    .slide.active{display:block}
-    .cartaz,.cartaz-p1,.cartaz-info{min-height:unset}
-    /* botões sempre acessíveis no mobile */
-    .nav{position:fixed; inset:auto; left:0; right:0; bottom:12px; pointer-events:none}
-    .arrow{position:fixed; bottom:12px; top:auto; transform:none}
-    .prev{left:12px} .next{right:12px}
-    body{overscroll-behavior-y:auto}
+    .nav .arrow{width:48px; height:48px; font-size:20px}
+    .nav .prev{left:8px} .nav .next{right:8px}
   }
 </style>
 </head>
 <body>
-<div class="shell">
-  <header>
-    <div class="title">Auscultação pública — Banco de Desenvolvimento de Moçambique</div>
-    <div class="pager" id="pager">1 / ?</div>
-  </header>
+<div class="slides">
 
-  <div class="stage" id="stage">
-    <div class="slides" id="slides">
-
-      <!-- SLIDE 1 — CAPA -->
-      <section class="slide active" id="slide-1" data-title="Capa">
-        <div class="cartaz">
-          <main>
-            <img src="emblema.png" class="emblema" alt="Emblema"/>
-            <h1 class="top-linha1">REPÚBLICA DE MOÇAMBIQUE</h1>
-            <h2 class="top-linha2">MINISTÉRIO DAS FINANÇAS</h2>
-            <h1 class="titulo">
-              Auscultação pública sobre <br/> a proposta de criação do <br/> Banco de Desenvolvimento de Moçambique
-            </h1>
-            <div class="rodape" id="dataRodape"></div>
-          </main>
-          <div class="faixas"><div class="faixa verde"></div><div class="faixa preto1"></div><div class="faixa branco"></div><div class="faixa preto2"></div><div class="faixa amarelo"></div></div>
-        </div>
-      </section>
-
-      <!-- SLIDE 2 — Citação do Presidente -->
-      <section class="slide" id="slide-2" data-title="Citação">
-        <div class="cartaz-p1">
-          <div class="grade">
-            <div class="foto">
-              <img src="Daniel-Chapo-foto-oficial_imagefull.png" alt="Presidente Daniel Francisco Chapo"/>
-            </div>
-            <div class="citacao">
-              <div class="aspas-inicio">“</div>
-              <blockquote>
-                Queremos um futuro onde o desenvolvimento seja acessível a todos. 
-                Por isso, vamos criar o <strong>Banco de Desenvolvimento de Moçambique</strong>, 
-                que terá a missão de estruturar, financiar e impulsionar projectos estratégicos para o progresso do nosso país.
-                Com os recursos gerados por activos como o gás natural, vamos capitalizar esse banco e investir de imediato em projectos que transformem a vida dos moçambicanos.
-                <span class="aspas-fim">”</span>
-              </blockquote>
-              <div class="assinatura">
-                Daniel Chapo, <span>em discurso de posse como Presidente da República</span>
-              </div>
-            </div>
-          </div>
-          <div class="faixas"><div class="faixa verde"></div><div class="faixa preto1"></div><div class="faixa branco"></div><div class="faixa preto2"></div><div class="faixa amarelo"></div></div>
-        </div>
-      </section>
-
-      <!-- SLIDE 3 — O que é um Banco de Desenvolvimento -->
-      <section class="slide" id="slide-3" data-title="O que é um BD?">
-        <div class="cartaz-info">
-          <div class="wrap">
-            <span class="pill">O que é um Banco de Desenvolvimento?</span>
-            <div class="card">
-              <ul class="bullets">
-                <li>Um Banco de Desenvolvimento é uma instituição financeira de longo prazo, criada para mobilizar recursos e financiar <strong>projectos estruturantes</strong> que o sistema bancário comercial não atende.</li>
-                <li>O <strong>BDM</strong> actuará como catalisador de investimentos estratégicos, oferecendo financiamento concessionado, capital próprio, garantias, produtos de comércio externo, gestão de fundos temáticos e suporte técnico.</li>
-              </ul>
-            </div>
-          </div>
-          <div class="faixas"><div class="faixa verde"></div><div class="faixa preto1"></div><div class="faixa branco"></div><div class="faixa preto2"></div><div class="faixa amarelo"></div></div>
-        </div>
-      </section>
-
-      <!-- SLIDE 4 — Razão para criar um BD -->
-      <section class="slide" id="slide-4" data-title="Porquê criar um BD?">
-        <div class="cartaz-info">
-          <div class="wrap">
-            <span class="pill">Qual a razão para a criação de um Banco de Desenvolvimento?</span>
-            <div class="card">
-              <ul class="bullets">
-                <li><strong>Riqueza de Recursos:</strong> Moçambique dispõe de abundantes recursos naturais e culturais, não largamente explorados.</li>
-                <li><strong>Potencial Estratégico:</strong> A posição geográfica privilegiada e a diversidade económica oferecem vantagens únicas para o comércio regional e internacional.</li>
-                <li><strong>Desafio Central:</strong> Transformar este potencial em resultados concretos — progresso real, sustentável e inclusivo para todos os moçambicanos.</li>
-              </ul>
-            </div>
-          </div>
-          <div class="faixas"><div class="faixa verde"></div><div class="faixa preto1"></div><div class="faixa branco"></div><div class="faixa preto2"></div><div class="faixa amarelo"></div></div>
-        </div>
-      </section>
-
-      <!-- SLIDE 5 — Diferenças face a bancos comerciais + Botão -->
-      <section class="slide" id="slide-5" data-title="BD vs Bancos Comerciais">
-        <div class="cartaz-info">
-          <div class="wrap">
-            <span class="pill">Porque o Banco de Desenvolvimento é diferente dos Bancos Comerciais</span>
-            <div class="card">
-              <ul class="bullets">
-                <li>Financiamento de <strong>longo prazo (5–20 anos)</strong> para sectores estratégicos (infra-estruturas, energia, agro-indústria, saúde, inovação).</li>
-                <li>Instrumentos diversificados: crédito concessionado, <strong>participação directa</strong> em empresas, garantias e assistência técnica.</li>
-                <li>Mandato de <strong>impacto</strong>: reduzir desigualdades, gerar emprego e promover sustentabilidade.</li>
-                <li>Os bancos comerciais focam crédito de curto prazo e negócios consolidados, visando <strong>maximização de lucros</strong> e exigindo garantias elevadas.</li>
-              </ul>
-            </div>
-            <div class="cta-row">
-              <a class="cta-btn" href="https://forms.gle/5bffcRqN7ubsVK3C6" target="_blank" rel="noopener noreferrer" aria-label="Abrir formulário de auscultação em nova aba">
-                📋 Participe na Auscultação
-              </a>
-            </div>
-          </div>
-          <div class="faixas"><div class="faixa verde"></div><div class="faixa preto1"></div><div class="faixa branco"></div><div class="faixa preto2"></div><div class="faixa amarelo"></div></div>
-        </div>
-      </section>
-
+  <!-- SLIDE 1 -->
+  <section class="slide">
+    <div class="cartaz">
+      <main>
+        <img src="emblema.png" class="emblema" alt="Emblema"/>
+        <h1 class="top-linha1">REPÚBLICA DE MOÇAMBIQUE</h1>
+        <h2 class="top-linha2">MINISTÉRIO DAS FINANÇAS</h2>
+        <h1 class="titulo">Auscultação pública sobre a proposta de criação do Banco de Desenvolvimento de Moçambique</h1>
+        <div class="rodape" id="dataRodape"></div>
+      </main>
+      <div class="faixas"><div class="faixa verde"></div><div class="faixa preto1"></div><div class="faixa branco"></div><div class="faixa preto2"></div><div class="faixa amarelo"></div></div>
     </div>
+  </section>
 
-    <div class="nav">
-      <button class="arrow prev" id="btnPrev" aria-label="Anterior">◀</button>
-      <button class="arrow next" id="btnNext" aria-label="Próximo">▶</button>
+  <!-- SLIDE 2 -->
+  <section class="slide">
+    <div class="cartaz-p1">
+      <div class="grade">
+        <div class="foto"><img src="Daniel-Chapo-foto-oficial_imagefull.png" alt="Presidente Daniel Francisco Chapo"/></div>
+        <div>
+          <blockquote>Queremos um futuro onde o desenvolvimento seja acessível a todos. Por isso, vamos criar o <strong>Banco de Desenvolvimento de Moçambique</strong>, que terá a missão de estruturar, financiar e impulsionar projectos estratégicos para o progresso do nosso país.</blockquote>
+          <div class="assinatura">Daniel Chapo, em discurso de posse como Presidente da República</div>
+        </div>
+      </div>
+      <div class="faixas"><div class="faixa verde"></div><div class="faixa preto1"></div><div class="faixa branco"></div><div class="faixa preto2"></div><div class="faixa amarelo"></div></div>
     </div>
-  </div>
+  </section>
 
-  <footer>
-    <div class="hint">Use as <span class="accent">setas do teclado</span> • PageUp/PageDown • Espaço/Shift+Espaço • <span class="accent">Deslize</span> no telemóvel</div>
-    <div class="buttons" id="buttons"></div>
-  </footer>
+  <!-- SLIDE 3 -->
+  <section class="slide">
+    <div class="cartaz-info">
+      <span class="pill">O que é um Banco de Desenvolvimento?</span>
+      <div class="card">
+        <ul class="bullets">
+          <li>Instituição financeira de longo prazo para mobilizar recursos e financiar <strong>projectos estruturantes</strong>.</li>
+          <li>O <strong>BDM</strong> actuará como catalisador de investimentos estratégicos com financiamento concessionado e suporte técnico.</li>
+        </ul>
+      </div>
+      <div class="faixas"><div class="faixa verde"></div><div class="faixa preto1"></div><div class="faixa branco"></div><div class="faixa preto2"></div><div class="faixa amarelo"></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 -->
+  <section class="slide">
+    <div class="cartaz-info">
+      <span class="pill">Qual a razão para a criação?</span>
+      <div class="card">
+        <ul class="bullets">
+          <li><strong>Riqueza de Recursos:</strong> abundantes mas pouco explorados.</li>
+          <li><strong>Potencial Estratégico:</strong> posição geográfica e diversidade económica únicas.</li>
+          <li><strong>Desafio Central:</strong> transformar potencial em progresso real e inclusivo.</li>
+        </ul>
+      </div>
+      <div class="faixas"><div class="faixa verde"></div><div class="faixa preto1"></div><div class="faixa branco"></div><div class="faixa preto2"></div><div class="faixa amarelo"></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 -->
+  <section class="slide">
+    <div class="cartaz-info">
+      <span class="pill">Diferenças face aos bancos comerciais</span>
+      <div class="card">
+        <ul class="bullets">
+          <li>Financiamento de <strong>longo prazo</strong> para sectores estratégicos.</li>
+          <li>Instrumentos diversificados: crédito concessionado, <strong>participação directa</strong>, garantias e assistência técnica.</li>
+          <li>Mandato de <strong>impacto</strong>: reduzir desigualdades e gerar emprego.</li>
+          <li>Bancos comerciais focam curto prazo e maximização de lucros.</li>
+        </ul>
+      </div>
+      <p style="margin-top:1.5rem; text-align:center">
+        <a href="participar.html"></a>
+      </p>
+      <div class="faixas"><div class="faixa verde"></div><div class="faixa preto1"></div><div class="faixa branco"></div><div class="faixa preto2"></div><div class="faixa amarelo"></div></div>
+    </div>
+  </section>
+
+  
+  <!-- SLIDE 6 — Página exclusiva do botão (linka para participar.html) -->
+  <section class="slide">
+    <div class="cartaz-info" style="text-align:center">
+      <h2 class="titulo" style="margin-top:0">Participe na Auscultação Pública</h2>
+      <p class="rodape" style="opacity:.85; margin:8px 0 18px">Deixe sua opinião sobre a criação do Banco de Desenvolvimento.</p>
+      <div class="cta-row">
+        <a class="cta-big" href="https://forms.gle/5bffcRqN7ubsVK3C6">📋 Deixa sua Openião</a>
+      </div>
+    </div>
+  </section>
+
+
+<div class="nav" aria-hidden="false" role="navigation">
+  <button class="arrow prev" aria-label="Anterior" title="Página anterior">◀</button>
+  <button class="arrow next" aria-label="Seguinte" title="Página seguinte">▶</button>
 </div>
 
 <script>
-  // Data automática
   const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
   const d = new Date();
   const rodapeEl = document.getElementById("dataRodape");
   if (rodapeEl) {
     rodapeEl.textContent = `Moçambique • ${d.getDate()} de ${meses[d.getMonth()]}, ${d.getFullYear()}`;
   }
+  // ===== Navegação entre slides por setas/teclado =====
+  const slidesEls = Array.from(document.querySelectorAll('.slide'));
+  const btnPrev = document.querySelector('.nav .prev');
+  const btnNext = document.querySelector('.nav .next');
+  let currentIndex = 0;
 
-  // Navegação
-  const slides = Array.from(document.querySelectorAll('.slide'));
-  const pager = document.getElementById('pager');
-  const btns = document.getElementById('buttons');
-  const btnPrev = document.getElementById('btnPrev');
-  const btnNext = document.getElementById('btnNext');
-  let i = 0;
-
-  function buildButtons(){
-    btns.innerHTML = '';
-    slides.forEach((s, idx) => {
-      const b = document.createElement('button');
-      b.className = 'jump';
-      const t = s.getAttribute('data-title') || `Pág. ${idx+1}`;
-      b.textContent = t;
-      b.onclick = () => goTo(idx);
-      btns.appendChild(b);
+  // Observa qual slide está mais visível
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(ent => {
+      if(ent.isIntersecting){ currentIndex = slidesEls.indexOf(ent.target); }
     });
-  }
-
-  function render(){
-    slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
-    pager.textContent = `${i+1} / ${slides.length}`;
-    [...btns.children].forEach((b, idx) => b.setAttribute('aria-current', idx === i ? 'page' : 'false'));
-    // Desactivar setas no limite (experiência mobile)
-    btnPrev.disabled = slides.length <= 1;
-    btnNext.disabled = slides.length <= 1;
-  }
+  }, { threshold: 0.6 });
+  slidesEls.forEach(s => io.observe(s));
 
   function go(delta){
-    i = (i + delta + slides.length) % slides.length;
-    render();
+    const next = Math.max(0, Math.min(slidesEls.length - 1, currentIndex + delta));
+    slidesEls[next].scrollIntoView({behavior:'smooth', block:'start'});
   }
-  function goTo(idx){
-    i = idx;
-    render();
-  }
+
+  btnPrev?.addEventListener('click', ()=>go(-1));
+  btnNext?.addEventListener('click', ()=>go(1));
 
   // Teclado
-  window.addEventListener('keydown', (e) => {
-    if (e.target.closest('input, textarea, select, button, a')) return; // evitar conflito com inputs
-    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') go(1);
-    if (e.key === 'ArrowLeft'  || e.key === 'PageUp'   || (e.shiftKey && e.key === ' ')) go(-1);
-    if (e.key === 'Home') goTo(0);
-    if (e.key === 'End')  goTo(slides.length - 1);
+  window.addEventListener('keydown', (e)=>{
+    if (e.target.closest('input, textarea, select')) return;
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ go(-1); }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){ go(1); }
+    if (e.key === 'Home'){ slidesEls[0].scrollIntoView({behavior:'smooth'}); }
+    if (e.key === 'End'){ slidesEls[slidesEls.length-1].scrollIntoView({behavior:'smooth'}); }
   });
-  btnPrev.onclick = () => go(-1);
-  btnNext.onclick = () => go(1);
-
-  // Swipe (touch) para telemóvel
-  let touchStartX = null, touchStartY = null, touchTime = 0;
-  const swipeArea = document.getElementById('stage');
-  swipeArea.addEventListener('touchstart', (e) => {
-    const t = e.changedTouches[0];
-    touchStartX = t.clientX; touchStartY = t.clientY; touchTime = Date.now();
-  }, {passive:true});
-  swipeArea.addEventListener('touchend', (e) => {
-    const t = e.changedTouches[0];
-    const dx = t.clientX - touchStartX; const dy = t.clientY - touchStartY;
-    const dt = Date.now() - touchTime;
-    const absX = Math.abs(dx), absY = Math.abs(dy);
-    // swipe horizontal curto e rápido
-    if (dt < 600 && absX > 40 && absX > absY) {
-      if (dx < 0) go(1); else go(-1);
-    }
-  });
-
-  // Corrigir 100vh no iOS Safari (opcional, já usamos 100svh)
-  // (Mantido como fallback para browsers antigos)
-  function fixVH(){
-    const vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  }
-  fixVH();
-  window.addEventListener('resize', fixVH);
-
-  buildButtons();
-  render();
 </script>
 </body>
 </html>
-
-
